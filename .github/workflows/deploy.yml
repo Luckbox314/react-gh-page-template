@@ -26,7 +26,6 @@ jobs:
             -F environment="production" \
             -F description="GitHub Pages Deployment" \
             -F auto_merge="false" \
-            -F required_contexts="[]" \
             -F transient_environment="false" \
             -F production_environment="true" \
             -H "Accept: application/vnd.github+json" \
