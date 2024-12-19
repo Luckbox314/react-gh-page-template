@@ -27,6 +27,8 @@ jobs:
       # Step 4: build the app in dist
       - name: Build the app
         run: npm run build
+        env:
+          REPOSITORY_NAME: ${{ github.event.repository.name}}
 
       # Step 5: Upload the build artifact
       - name: Upload artifact
