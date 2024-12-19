@@ -1,0 +1,29 @@
+name: Deploy to GitHub Pages
+
+on:
+  workflow_run:
+    workflows:
+      - Build App
+    types:
+      - completed
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Step 2: Download the build artifact
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: build
+
+      # Step 3: Deploy to GitHub Pages
+      - name: Deploy to GitHub Pages
+        run: npm run deploy
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
