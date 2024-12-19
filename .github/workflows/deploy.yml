@@ -30,6 +30,8 @@ jobs:
             -F production_environment="true" \
             -H "Accept: application/vnd.github+json" \
             -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" > deployment.json
+        env:
+          GH_TOKEN: ${{ github.token }}
 
       - name: Download artifact
         uses: dawidd6/action-download-artifact@v7
@@ -55,3 +57,5 @@ jobs:
             -F environment_url="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}" \
             -H "Accept: application/vnd.github+json" \
             -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}"
+        env:
+          GH_TOKEN: ${{ github.token }}
