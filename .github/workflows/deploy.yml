@@ -14,11 +14,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the code
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Step 2: Download the build artifact
+      - name: Create Deployment
+        id: create_deployment
+        run: |
+          gh api -X POST "repos/${{ github.repository }}/deployments" \
+            -F ref="${{ github.ref }}" \
+            -F environment="production" \
+            -F description="GitHub Pages Deployment" \
+            -F auto_merge="false" \
+            -F required_contexts="[]" \
+            -F transient_environment="false" \
+            -F production_environment="true" \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" > deployment.json
+
       - name: Download artifact
         uses: dawidd6/action-download-artifact@v7
         with:
@@ -28,10 +40,18 @@ jobs:
           name: build
           path: dist
 
-      # Step 3: Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
         run: |
           git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
           npx gh-pages -d dist -u "github-actions-bot <support+actions@github.com>"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update Deployment Status
+        run: |
+          deployment_id=$(cat deployment.json | jq -r '.id')
+          gh api -X POST "repos/${{ github.repository }}/deployments/${deployment_id}/statuses" \
+            -F state="success" \
+            -F environment_url="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}"
