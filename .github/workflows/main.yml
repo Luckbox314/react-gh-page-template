@@ -1,4 +1,4 @@
-name: Deploy to gh-pages from main
+name: deploy-to-gh-pages-from-main
 on:
   push:
     branches: [main]
@@ -12,4 +12,5 @@ jobs:
         with:
           node-version: 20
       - run: npm ci
+      - run: npm run deploy
           
