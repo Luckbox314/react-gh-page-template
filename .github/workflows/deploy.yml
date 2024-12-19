@@ -18,20 +18,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Create Deployment
-        id: create_deployment
-        run: |
-          gh api -X POST "repos/${{ github.repository }}/deployments" \
-            -F ref="${{ github.ref }}" \
-            -F environment="production" \
-            -F description="GitHub Pages Deployment" \
-            -F auto_merge="false" \
-            -F transient_environment="false" \
-            -F production_environment="true" \
-            -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" > deployment.json
-        env:
-          GH_TOKEN: ${{ github.token }}
+      # - name: Create Deployment
+      #   id: create_deployment
+      #   run: |
+      #     gh api -X POST "repos/${{ github.repository }}/deployments" \
+      #       -F ref="${{ github.ref }}" \
+      #       -F environment="production" \
+      #       -F description="GitHub Pages Deployment" \
+      #       -F auto_merge="false" \
+      #       -F transient_environment="false" \
+      #       -F production_environment="true" \
+      #       -H "Accept: application/vnd.github+json" \
+      #       -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" > deployment.json
+      #   env:
+      #     GH_TOKEN: ${{ github.token }}
 
       - name: Download artifact
         uses: dawidd6/action-download-artifact@v7
@@ -49,13 +49,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Update Deployment Status
-        run: |
-          deployment_id=$(cat deployment.json | jq -r '.id')
-          gh api -X POST "repos/${{ github.repository }}/deployments/${deployment_id}/statuses" \
-            -F state="success" \
-            -F environment_url="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}" \
-            -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}"
-        env:
-          GH_TOKEN: ${{ github.token }}
+      # - name: Update Deployment Status
+      #   run: |
+      #     deployment_id=$(cat deployment.json | jq -r '.id')
+      #     gh api -X POST "repos/${{ github.repository }}/deployments/${deployment_id}/statuses" \
+      #       -F state="success" \
+      #       -F environment_url="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}" \
+      #       -H "Accept: application/vnd.github+json" \
+      #       -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}"
+      #   env:
+      #     GH_TOKEN: ${{ github.token }}
