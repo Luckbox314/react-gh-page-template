@@ -1,0 +1,16 @@
+name: deploy-to-gh-pages-from-main
+on:
+  push:
+    branches: [main]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4.1.0
+        with:
+          node-version: 20
+      - run: npm ci
+      - run: npm run deploy
+          
